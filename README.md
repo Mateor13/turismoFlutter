@@ -1,16 +1,67 @@
-# sitios_turisticos
+# Sitios Turísticos 🏖️
 
-A new Flutter project.
+## Generación de APK y Firma
 
-## Getting Started
+### 1. Crear Keystore (Solo la primera vez)
 
-This project is a starting point for a Flutter application.
+```bash
+keytool -genkey -v -keystore directorio -keyalg RSA -keysize 2048 -validity 10000 -alias alias-de-la-firma
+```
 
-A few resources to get you started if this is your first Flutter project:
+### 2. Configurar key.properties en la carpeta android
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Crea el archivo `key.properties` en la raíz del proyecto con:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```properties
+storePassword=tu_store_password
+keyPassword=tu_key_password
+keyAlias=alias-de-la-firma
+storeFile=directorio_con_la_ruta_absoluta_del_archivo
+```
+
+### 3. Cambiar el build.gradle.kts
+
+Se cambia en el archivo `build.gradle.kts` que esta en la carpeta android/app
+
+*Antes de BuildTypes*
+
+```
+    val keystorePropertiesFile = rootProject.file("key.properties")
+    val keystoreProperties = Properties()
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(keystorePropertiesFile.inputStream())
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+        }
+    }
+```
+
+Se cambia el buildTypes del build.gradle.kts por esto:
+
+```
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+    }
+
+```
+
+### 4. Generar APK
+
+Para generar el APK firmado:
+
+```bash
+# APK de release (firmado)
+flutter build apk --release
+
+```
+
