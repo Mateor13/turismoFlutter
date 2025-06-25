@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'detalle_lugar.dart';
 
 class TurismoPage extends StatefulWidget {
   const TurismoPage({super.key});
@@ -42,16 +43,20 @@ class _TurismoPageState extends State<TurismoPage> {
                 children: [
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'Lugar'),
-                    validator: (value) => value!.isEmpty ? 'Ingrese un nombre' : null,
+                    validator: (value) =>
+                        value!.isEmpty ? 'Ingrese un nombre' : null,
                     onSaved: (value) => nombre = value!,
                   ),
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'Descripción'),
-                    validator: (value) => value!.isEmpty ? 'Ingrese una descripción' : null,
+                    validator: (value) =>
+                        value!.isEmpty ? 'Ingrese una descripción' : null,
                     onSaved: (value) => descripcion = value!,
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Calificación (0-10)'),
+                    decoration: const InputDecoration(
+                      labelText: 'Calificación (0-10)',
+                    ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       final val = double.tryParse(value ?? '');
@@ -63,8 +68,11 @@ class _TurismoPageState extends State<TurismoPage> {
                     onSaved: (value) => valor = int.parse(value!),
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'URL de la imagen'),
-                    validator: (value) => value!.isEmpty ? 'Ingrese la URL de la imagen' : null,
+                    decoration: const InputDecoration(
+                      labelText: 'URL de la imagen',
+                    ),
+                    validator: (value) =>
+                        value!.isEmpty ? 'Ingrese la URL de la imagen' : null,
                     onSaved: (value) => imagenUrl = value!,
                   ),
                   const SizedBox(height: 10),
@@ -79,25 +87,44 @@ class _TurismoPageState extends State<TurismoPage> {
           const Divider(),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('turismo').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('turismo')
+                  .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+                if (!snapshot.hasData)
+                  return const Center(child: CircularProgressIndicator());
                 final docs = snapshot.data!.docs;
-                if (docs.isEmpty) return const Center(child: Text('No hay lugares aún.'));
+                if (docs.isEmpty)
+                  return const Center(child: Text('No hay lugares aún.'));
                 return ListView.builder(
                   itemCount: docs.length,
                   itemBuilder: (context, index) {
                     final lugar = docs[index];
                     final data = lugar.data() as Map<String, dynamic>;
                     return ListTile(
-                      leading: data['imagenUrl'] != null && data['imagenUrl'].isNotEmpty
-                          ? Image.network(data['imagenUrl'], width: 50, height: 50, fit: BoxFit.cover)
+                      leading:
+                          data['imagenUrl'] != null &&
+                              data['imagenUrl'].isNotEmpty
+                          ? Image.network(
+                              data['imagenUrl'],
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            )
                           : const Icon(Icons.image_not_supported),
                       title: Text(data['lugar'] ?? 'Sin nombre'),
                       subtitle: Text(data['descripcion'] ?? 'Sin descripción'),
                       trailing: Text(
                         '⭐ ${data.containsKey('valor') && data['valor'] != null ? data['valor'].toString() : 'N/A'}',
                       ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetalleLugarPage(data: data),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
@@ -105,7 +132,7 @@ class _TurismoPageState extends State<TurismoPage> {
             ),
           ),
         ],
- ),
-);
-}
+      ),
+    );
+  }
 }

@@ -10,11 +10,7 @@ void main() async {
   
   // Cargar variables de entorno PRIMERO
   await dotenv.load(fileName: ".env");
-  
-  // Verificar que las variables se cargaron
-  print('API Key loaded: ${dotenv.env['FIREBASE_API_KEY']?.substring(0, 10)}...');
-  print('Project ID: ${dotenv.env['FIREBASE_PROJECT_ID']}');
-  
+  // Inicializar Firebase con las opciones predeterminadas
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
