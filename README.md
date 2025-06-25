@@ -10,7 +10,7 @@ keytool -genkey -v -keystore directorio -keyalg RSA -keysize 2048 -validity 1000
 
 ### 2. Configurar key.properties en la carpeta android
 
-Crea el archivo `key.properties` en la raíz del proyecto con:
+Crea el archivo `key.properties` en la carpeta de android con:
 
 ```properties
 storePassword=tu_store_password
