@@ -23,6 +23,12 @@ storeFile=directorio_con_la_ruta_absoluta_del_archivo
 
 Se cambia en el archivo `build.gradle.kts` que esta en la carpeta android/app
 
+Importar al comienzo del archivo:
+
+```
+import java.util.Properties
+```
+
 *Antes de BuildTypes*
 
 ```
