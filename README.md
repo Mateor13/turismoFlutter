@@ -8,7 +8,7 @@
 keytool -genkey -v -keystore directorio -keyalg RSA -keysize 2048 -validity 10000 -alias alias-de-la-firma
 ```
 
-### 2. Configurar key.properties en la carpeta android
+### 2. Configurar key.properties 
 
 Crea el archivo `key.properties` en la carpeta de android con:
 
