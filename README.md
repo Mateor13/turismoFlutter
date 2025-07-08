@@ -19,6 +19,11 @@ keyAlias=alias-de-la-firma
 storeFile=directorio_con_la_ruta_absoluta_del_archivo
 ```
 
+El directorio tiene que tener esta estructura:
+```
+C:\\ruta\\del\\archivo
+```
+
 ### 3. Cambiar el build.gradle.kts
 
 Se cambia en el archivo `build.gradle.kts` que esta en la carpeta android/app
